@@ -21,5 +21,10 @@ public class UserServiceImpl implements UserService {
     public User saveUserData(User user) {
         return user;
     }
+
+    @Override
+    public User deleteUserByName(String name) {
+        return new User(name, -1);
+    }
     
 }

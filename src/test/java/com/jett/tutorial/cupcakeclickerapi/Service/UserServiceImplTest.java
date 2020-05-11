@@ -40,11 +40,20 @@ public class UserServiceImplTest {
 
         assertTrue(user.getName().equals(name));
     }
+
     @Test
     public void whenValidUser_thenUserShouldBeSaved() {
         User testUser = new User("Boss", 1);
         User user = userService.saveUserData(testUser);
 
         assertTrue(user.equals(testUser));
+    }
+
+    @Test
+    public void whenValidName_thenUserShouldBeDeleted() {
+        String name = "Boss";
+        User response = userService.deleteUserByName(name);
+
+        assertTrue(response.getName().equals("Boss"));
     }
 }

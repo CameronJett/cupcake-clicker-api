@@ -6,9 +6,11 @@ import com.jett.tutorial.cupcakeclickerapi.Service.UserService;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
@@ -28,9 +30,14 @@ public class UserController {
 		return userService.createNewUser(name);
 	}
 
-	@PostMapping("/save")
+	@PutMapping("/save")
 	public User saveUserData(@RequestBody User user) {
 		return userService.saveUserData(user);
+	}
+
+	@DeleteMapping("/{userName}")
+	public User deleteUserByName(@PathVariable("userName") String name) {
+		return userService.deleteUserByName(name);
 	}
 
 }

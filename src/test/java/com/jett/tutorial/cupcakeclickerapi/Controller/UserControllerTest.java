@@ -3,6 +3,8 @@ package com.jett.tutorial.cupcakeclickerapi.Controller;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,7 +55,7 @@ public class UserControllerTest {
 	}
     
 	@Test
-	public void shouldReturnUserOnSaveDataPostRequest() throws Exception {
+	public void shouldReturnUserOnSaveDataPutRequest() throws Exception {
         User user = new User("Boss", 1);
         Mockito.when(userService.saveUserData(user)).thenReturn(user);
 
@@ -62,10 +64,19 @@ public class UserControllerTest {
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson=ow.writeValueAsString(user);
 
-        mockMvc.perform(post("/save").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/save").contentType(MediaType.APPLICATION_JSON)
             .content(requestJson))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().string(containsString("Boss")));
+    }
+    
+	@Test
+	public void shouldReturnSuccessMessageOnUserDeleteRequest() throws Exception {
+        User user = new User("Boss", 1);
+        Mockito.when(userService.deleteUserByName(user.getName())).thenReturn(user);
+
+        mockMvc.perform(delete("/Boss")).andDo(print()).andExpect(status().isOk())
+				.andExpect(content().string(containsString("Boss")));
 	}
 }
