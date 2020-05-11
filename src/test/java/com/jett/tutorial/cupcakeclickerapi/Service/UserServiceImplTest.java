@@ -2,11 +2,16 @@ package com.jett.tutorial.cupcakeclickerapi.Service;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+
 import com.jett.tutorial.cupcakeclickerapi.Model.User;
+import com.jett.tutorial.cupcakeclickerapi.Repository.UserRepository;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -24,12 +29,21 @@ public class UserServiceImplTest {
 
     @Autowired
     private UserService userService;
+
+    @MockBean
+    private UserRepository userRepository;
     
     @Test
     public void whenValidName_thenUserShouldBeFound() {
         String name = "Boss";
-        User user = userService.getUserByName(name);
+        ArrayList<User> users = new ArrayList<User>();
+        users.add(new User(1, name, 1));
 
+        Iterable<User> iterable = users;
+        Mockito.when(userRepository.findAll())
+            .thenReturn(iterable);
+
+        User user = userService.getUserByName(name);
         assertTrue(user.getName().equals(name));
     }
     
@@ -43,7 +57,7 @@ public class UserServiceImplTest {
 
     @Test
     public void whenValidUser_thenUserShouldBeSaved() {
-        User testUser = new User("Boss", 1);
+        User testUser = new User(1, "Boss", 1);
         User user = userService.saveUserData(testUser);
 
         assertTrue(user.equals(testUser));

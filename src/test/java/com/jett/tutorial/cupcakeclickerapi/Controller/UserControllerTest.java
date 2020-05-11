@@ -37,7 +37,7 @@ public class UserControllerTest {
 
 	@Test
 	public void shouldReturnNameOnGetRequest() throws Exception {
-        Mockito.when(userService.getUserByName(Mockito.anyString())).thenReturn(new User("Boss", 0));
+        Mockito.when(userService.getUserByName(Mockito.anyString())).thenReturn(new User(1, "Boss", 0));
 
 		mockMvc.perform(get("/Boss")).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString("Boss")));
@@ -45,7 +45,7 @@ public class UserControllerTest {
     
 	@Test
 	public void shouldReturnUserOnPostRequest() throws Exception {
-        Mockito.when(userService.createNewUser(Mockito.anyString())).thenReturn(new User("Boss", 0));
+        Mockito.when(userService.createNewUser(Mockito.anyString())).thenReturn(new User(1, "Boss", 0));
 
         mockMvc.perform(post("/").contentType(MediaType.APPLICATION_JSON)
             .content("{\"Boss\"}"))
@@ -56,7 +56,7 @@ public class UserControllerTest {
     
 	@Test
 	public void shouldReturnUserOnSaveDataPutRequest() throws Exception {
-        User user = new User("Boss", 1);
+        User user = new User(1, "Boss", 1);
         Mockito.when(userService.saveUserData(user)).thenReturn(user);
 
         ObjectMapper mapper = new ObjectMapper();
@@ -73,7 +73,7 @@ public class UserControllerTest {
     
 	@Test
 	public void shouldReturnSuccessMessageOnUserDeleteRequest() throws Exception {
-        User user = new User("Boss", 1);
+        User user = new User(1, "Boss", 1);
         Mockito.when(userService.deleteUserByName(user.getName())).thenReturn(user);
 
         mockMvc.perform(delete("/Boss")).andDo(print()).andExpect(status().isOk())
