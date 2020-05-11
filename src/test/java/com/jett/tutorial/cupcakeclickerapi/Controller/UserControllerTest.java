@@ -7,6 +7,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.jett.tutorial.cupcakeclickerapi.Model.User;
 import com.jett.tutorial.cupcakeclickerapi.Service.UserService;
 
@@ -44,6 +47,23 @@ public class UserControllerTest {
 
         mockMvc.perform(post("/").contentType(MediaType.APPLICATION_JSON)
             .content("{\"Boss\"}"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("Boss")));
+	}
+    
+	@Test
+	public void shouldReturnUserOnSaveDataPostRequest() throws Exception {
+        User user = new User("Boss", 1);
+        Mockito.when(userService.saveUserData(user)).thenReturn(user);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson=ow.writeValueAsString(user);
+
+        mockMvc.perform(post("/save").contentType(MediaType.APPLICATION_JSON)
+            .content(requestJson))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(content().string(containsString("Boss")));

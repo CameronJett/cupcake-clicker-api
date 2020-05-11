@@ -9,12 +9,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserByName(String name) {
-        return new User(name, 0);
+        return new User(name, 23);
     }
 
     @Override
     public User createNewUser(String name) {
         return new User(name, 0);
+    }
+
+    @Override
+    public User saveUserData(User user) {
+        return user;
     }
     
 }

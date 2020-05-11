@@ -27,4 +27,10 @@ public class UserController {
 	public User createNewUser(@RequestBody String name) {
 		return userService.createNewUser(name);
 	}
+
+	@PostMapping("/save")
+	public User saveUserData(@RequestBody User user) {
+		return userService.saveUserData(user);
+	}
+
 }
