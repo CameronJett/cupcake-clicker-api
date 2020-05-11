@@ -20,7 +20,7 @@ public class UserServiceImplTest {
 
     @TestConfiguration
     static class UserServiceImplTestContextConfiguration {
-  
+
         @Bean
         public UserService userService() {
             return new UserServiceImpl();
@@ -32,7 +32,7 @@ public class UserServiceImplTest {
 
     @MockBean
     private UserRepository userRepository;
-    
+
     @Test
     public void whenValidName_thenUserShouldBeFound() {
         String name = "Boss";
@@ -40,34 +40,42 @@ public class UserServiceImplTest {
         users.add(new User(1, name, 1));
 
         Iterable<User> iterable = users;
-        Mockito.when(userRepository.findAll())
-            .thenReturn(iterable);
+        Mockito.when(userRepository.findAll()).thenReturn(iterable);
 
         User user = userService.getUserByName(name);
         assertTrue(user.getName().equals(name));
     }
-    
+
     @Test
     public void whenValidName_thenUserShouldBeCreated() {
         String name = "Boss";
-        User user = userService.createNewUser(name);
+    
+        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(new User(1, name, 0));
 
-        assertTrue(user.getName().equals(name));
+        User expectedUser = userService.createNewUser(name);
+        assertTrue(expectedUser.getName().equals(name));
     }
 
     @Test
     public void whenValidUser_thenUserShouldBeSaved() {
-        User testUser = new User(1, "Boss", 1);
-        User user = userService.saveUserData(testUser);
+        User user = new User(1, "Boss", 5);
 
-        assertTrue(user.equals(testUser));
+        Mockito.when(userRepository.save(Mockito.any(User.class))).thenReturn(user);
+
+        User expectedUser = userService.saveUserData(user);
+        assertTrue(expectedUser.getName().equals(user.getName()));
     }
 
     @Test
     public void whenValidName_thenUserShouldBeDeleted() {
         String name = "Boss";
-        User response = userService.deleteUserByName(name);
+        ArrayList<User> users = new ArrayList<User>();
+        users.add(new User(1, name, 1));
 
-        assertTrue(response.getName().equals("Boss"));
+        Iterable<User> iterable = users;
+        Mockito.when(userRepository.findAll()).thenReturn(iterable);
+
+        User user = userService.deleteUserByName(name);
+        assertTrue(user.getClicks() == -1);
     }
 }

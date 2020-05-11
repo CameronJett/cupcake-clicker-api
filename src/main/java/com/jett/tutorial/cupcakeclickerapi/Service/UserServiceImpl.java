@@ -24,16 +24,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createNewUser(String name) {
-        return new User(1, name, 0);
-    }
+        User user = new User();
+        user.setName(name);
+        user.setClicks(0);
 
-    @Override
-    public User saveUserData(User user) {
+        userRepository.save(user);
         return user;
     }
 
     @Override
+    public User saveUserData(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
     public User deleteUserByName(String name) {
+        for (User user : userRepository.findAll()) {
+            if (user.getName().equals(name)) {
+                userRepository.delete(user);
+            }
+        }
         return new User(1, name, -1);
     }
     
